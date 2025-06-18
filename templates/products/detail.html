@@ -1,0 +1,192 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{ product.name }} - Amazon Clone{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Products</a></li>
+            <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-5 mb-4">
+            <div class="card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                {% else %}
+                    <div class="bg-light p-5 text-center">No image available</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Product Details -->
+        <div class="col-md-7">
+            <h1 class="mb-3">{{ product.name }}</h1>
+            
+            <div class="mb-3">
+                <span class="text-warning">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                </span>
+                <span class="text-muted">4.0 (120 reviews)</span>
+            </div>
+            
+            <hr>
+            
+            <div class="mb-3">
+                <h2 class="text-danger">${{ product.price }}</h2>
+                <span class="badge bg-success">In Stock</span>
+            </div>
+            
+            <div class="mb-4">
+                <p>{{ product.description|linebreaks }}</p>
+            </div>
+            
+            <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mb-4">
+                {% csrf_token %}
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="quantity" class="col-form-label">Quantity:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select name="quantity" id="quantity" class="form-select">
+                            {% for i in "12345"|make_list %}
+                                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="d-grid gap-2">
+                <button class="btn btn-outline-warning">Add to Wish List</button>
+            </div>
+            
+            <hr>
+            
+            <div class="mb-3">
+                <h5>Shipping & Returns</h5>
+                <p class="mb-1"><i class="fas fa-truck me-2"></i> Free shipping on orders over $25</p>
+                <p><i class="fas fa-undo me-2"></i> 30-day return policy</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Description, Reviews, etc. -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab" aria-controls="specifications" aria-selected="false">Specifications</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews</button>
+                </li>
+            </ul>
+            <div class="tab-content p-4 border border-top-0" id="productTabsContent">
+                <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                    <h4>Product Description</h4>
+                    <p>{{ product.description|linebreaks }}</p>
+                </div>
+                <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                    <h4>Product Specifications</h4>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Brand</th>
+                                <td>Amazon</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Model</th>
+                                <td>{{ product.name }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Category</th>
+                                <td>{{ product.category.name }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Availability</th>
+                                <td>{% if product.available %}In Stock{% else %}Out of Stock{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    <h4>Customer Reviews</h4>
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="text-warning me-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </span>
+                            <span class="fw-bold">Great product!</span>
+                        </div>
+                        <p class="mb-1">By John Doe on October 15, 2023</p>
+                        <p>This product exceeded my expectations. The quality is excellent and it works perfectly.</p>
+                    </div>
+                    <hr>
+                    <div>
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="text-warning me-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </span>
+                            <span class="fw-bold">Absolutely love it!</span>
+                        </div>
+                        <p class="mb-1">By Jane Smith on September 28, 2023</p>
+                        <p>I've been using this for a month now and it's amazing. Highly recommend!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Products -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-4">Related Products</h3>
+        </div>
+        
+        {% for i in "1234"|make_list %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <div class="bg-light p-4 text-center">Product Image</div>
+                <div class="card-body">
+                    <h5 class="card-title">Related Product {{ forloop.counter }}</h5>
+                    <p class="card-text text-danger fw-bold">$99.99</p>
+                    <div class="d-flex justify-content-between">
+                        <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                        <button class="btn btn-sm btn-warning">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

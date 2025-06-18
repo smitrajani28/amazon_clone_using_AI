@@ -1,0 +1,188 @@
+{% extends "base/base.html" %}
+
+{% block title %}Amazon Clone - Online Shopping{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Daily Offers Slider -->
+    {% if daily_offers %}
+    <div id="dailyOffersCarousel" class="carousel slide mb-4 amazon-carousel" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            {% for offer in daily_offers %}
+                <button type="button" data-bs-target="#dailyOffersCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+        <div class="carousel-inner">
+            {% for offer in daily_offers %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}" data-offer-id="{{ offer.id }}">
+                    <div class="offer-slide" style="background-color: {% cycle '#232f3e' '#131A22' '#3B4455' '#485769' '#37475A' %}">
+                        <div class="container h-100">
+                            <div class="row align-items-center h-100">
+                                <div class="col-md-6 offer-content">
+                                    <div class="offer-badge">Limited Time Offer</div>
+                                    <h2 class="offer-title">{{ offer.title }}</h2>
+                                    <p class="offer-description">{{ offer.description }}</p>
+                                    <div class="offer-cta">
+                                        {% if offer.product %}
+                                            <a href="{{ offer.product.get_absolute_url }}" class="btn btn-warning btn-lg">Shop Now</a>
+                                            <span class="offer-price ms-3">${{ offer.product.price }}</span>
+                                        {% elif offer.url %}
+                                            <a href="{{ offer.url }}" class="btn btn-warning btn-lg">Shop Now</a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="offer-timer mt-3" data-countdown="2023/12/31">
+                                        <span class="timer-item"><span class="timer-count">00</span><span class="timer-label">Days</span></span>
+                                        <span class="timer-item"><span class="timer-count">00</span><span class="timer-label">Hours</span></span>
+                                        <span class="timer-item"><span class="timer-count">00</span><span class="timer-label">Mins</span></span>
+                                        <span class="timer-item"><span class="timer-count">00</span><span class="timer-label">Secs</span></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center transparent-image-container">
+                                    <div class="image-wrapper">
+                                        {% if offer.image %}
+                                            <img src="{{ offer.image.url }}" class="offer-image" alt="{{ offer.title }}">
+                                        {% else %}
+                                            <div class="offer-image-placeholder">
+                                                {% if offer.product and offer.product.category.name == 'Electronics' %}
+                                                    <img src="https://m.media-amazon.com/images/I/61CGHv6kmWL._AC_UY327_FMwebp_QL65_.jpg" class="offer-image" alt="{{ offer.title }}">
+                                                {% elif offer.product and offer.product.category.name == 'Books' %}
+                                                    <img src="https://m.media-amazon.com/images/I/71KL6aEpKrL._AC_UY327_FMwebp_QL65_.jpg" class="offer-image" alt="{{ offer.title }}">
+                                                {% elif offer.product and offer.product.category.name == 'Home & Kitchen' %}
+                                                    <img src="https://m.media-amazon.com/images/I/71VbHaAqbML._AC_UY327_FMwebp_QL65_.jpg" class="offer-image" alt="{{ offer.title }}">
+                                                {% elif offer.product and offer.product.category.name == 'Clothing' %}
+                                                    <img src="https://m.media-amazon.com/images/I/61+fasySBQL._AC_UL640_FMwebp_QL65_.jpg" class="offer-image" alt="{{ offer.title }}">
+                                                {% elif offer.product and offer.product.category.name == 'Toys & Games' %}
+                                                    <img src="https://m.media-amazon.com/images/I/71qsvtqJWML._AC_UL640_FMwebp_QL65_.jpg" class="offer-image" alt="{{ offer.title }}">
+                                                {% else %}
+                                                    <img src="https://via.placeholder.com/400x300/232F3E/FFFFFF/?text=Special+Offer" class="offer-image" alt="{{ offer.title }}">
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev carousel-nav-btn" type="button" data-bs-target="#dailyOffersCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next carousel-nav-btn" type="button" data-bs-target="#dailyOffersCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    {% else %}
+    <!-- Hero Banner (shown if no offers) -->
+    <div class="bg-dark text-white p-5 mb-4 text-center">
+        <h1>Welcome to Amazon Clone</h1>
+        <p class="lead">Discover amazing products at great prices</p>
+        <a href="{% url 'products:product_list' %}" class="btn btn-warning">Shop Now</a>
+    </div>
+    {% endif %}
+
+    <!-- Featured Categories -->
+    <div class="row mb-4">
+        <h2 class="mb-3">Shop by Category</h2>
+        {% for category in categories %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <a href="{{ category.get_absolute_url }}" class="btn btn-outline-primary">Shop Now</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No categories available</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Featured Products -->
+    <div class="row">
+        <h2 class="mb-3">Featured Products</h2>
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                {% else %}
+                <div class="bg-light p-4 text-center">No image</div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text text-danger fw-bold">${{ product.price }}</p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary">View Details</a>
+                        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-sm btn-warning">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No products available</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize countdown timers
+        const timerElements = document.querySelectorAll('.offer-timer');
+        timerElements.forEach(function(timerElement) {
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 3); // 3 days from now
+            
+            function updateTimer() {
+                const now = new Date();
+                const diff = targetDate - now;
+                
+                if (diff <= 0) {
+                    timerElement.innerHTML = '<span class="expired">Offer Expired</span>';
+                    return;
+                }
+                
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                timerElement.querySelector('.timer-item:nth-child(1) .timer-count').textContent = days.toString().padStart(2, '0');
+                timerElement.querySelector('.timer-item:nth-child(2) .timer-count').textContent = hours.toString().padStart(2, '0');
+                timerElement.querySelector('.timer-item:nth-child(3) .timer-count').textContent = minutes.toString().padStart(2, '0');
+                timerElement.querySelector('.timer-item:nth-child(4) .timer-count').textContent = seconds.toString().padStart(2, '0');
+            }
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        });
+        
+        // Add hover effect to carousel items
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        carouselItems.forEach(function(item) {
+            item.addEventListener('mouseenter', function() {
+                this.classList.add('hover');
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.classList.remove('hover');
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base/base.html" %}
+
+{% block title %}Sign In - Amazon Clone{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Sign In</h3>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Email or username</label>
+                            <input type="text" name="username" class="form-control" id="id_username" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" id="id_password" required>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning">Sign In</button>
+                        </div>
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger mt-3">
+                                Your username and password didn't match. Please try again.
+                            </div>
+                        {% endif %}
+                    </form>
+                    
+                    <hr>
+                    
+                    <div class="text-center">
+                        <p>New to Amazon?</p>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-light w-100 border">Create your Amazon account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

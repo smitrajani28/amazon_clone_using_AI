@@ -1,0 +1,59 @@
+{% extends "base/base.html" %}
+
+{% block title %}Select Delivery Method - Amazon Clone{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders:order_history' %}">Orders</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders:order_detail' order.id %}">Order #{{ order.id }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Select Delivery Method</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Select Delivery Method</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Order #{{ order.id }}</h5>
+                    <p class="text-muted">Placed on {{ order.created_at|date:"F j, Y" }}</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h6>Delivery Options:</h6>
+                            
+                            {% for radio in form.delivery_method %}
+                            <div class="form-check mb-3">
+                                {{ radio.tag }}
+                                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                    <strong>{{ radio.choice_label }}</strong>
+                                    {% if radio.choice_value == 'standard' %}
+                                        <div class="text-muted small">Free - Delivery by {{ order.created_at|date:"F j, Y"|add:" + 5 days" }}</div>
+                                    {% elif radio.choice_value == 'express' %}
+                                        <div class="text-muted small">$9.99 - Delivery by {{ order.created_at|date:"F j, Y"|add:" + 2 days" }}</div>
+                                    {% elif radio.choice_value == 'same_day' %}
+                                        <div class="text-muted small">$19.99 - Delivery today before 9 PM</div>
+                                    {% endif %}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning">Update Delivery Method</button>
+                            <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

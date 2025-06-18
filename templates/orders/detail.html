@@ -1,0 +1,216 @@
+{% extends "base/base.html" %}
+
+{% block title %}Order #{{ order.id }} - Amazon Clone{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders:order_history' %}">Your Orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order #{{ order.id }}</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Order #{{ order.id }}</h4>
+            <span class="badge {% if order.status == 'delivered' %}bg-success{% elif order.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                {{ order.status|title }}
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Order Information</h5>
+                    <p class="mb-1"><strong>Order Date:</strong> {{ order.created|date:"F j, Y, g:i a" }}</p>
+                    <p class="mb-1"><strong>Last Updated:</strong> {{ order.updated|date:"F j, Y, g:i a" }}</p>
+                    <p class="mb-1"><strong>Payment Status:</strong> {% if order.paid %}<span class="text-success">Paid</span>{% else %}<span class="text-danger">Unpaid</span>{% endif %}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Shipping Information</h5>
+                    <p class="mb-1"><strong>{{ order.first_name }} {{ order.last_name }}</strong></p>
+                    <p class="mb-1">{{ order.address }}</p>
+                    <p class="mb-1">{{ order.city }}, {{ order.postal_code }}</p>
+                    <p class="mb-0"><strong>Email:</strong> {{ order.email }}</p>
+                </div>
+            </div>
+            
+            <h5 class="mb-3">Order Items</h5>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if item.product.image %}
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
+                                        {% else %}
+                                            <div class="bg-light me-3" style="width: 50px; height: 50px;"></div>
+                                        {% endif %}
+                                        <div>
+                                            <a href="{{ item.product.get_absolute_url }}" class="text-decoration-none">{{ item.product.name }}</a>
+                                            <small class="d-block text-muted">{{ item.product.category.name }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${{ item.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td class="text-end">${{ item.get_cost }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                            <td class="text-end">${{ order.get_total_cost }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Shipping:</strong></td>
+                            <td class="text-end">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                            <td class="text-end text-danger"><strong>${{ order.get_total_cost }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{% url 'orders:order_history' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Orders
+                </a>
+                
+                {% if order.status == 'pending' or order.status == 'processing' %}
+                    <button class="btn btn-danger float-end">
+                        <i class="fas fa-times me-2"></i> Cancel Order
+                    </button>
+                {% endif %}
+                
+                <a href="{% url 'products:product_list' %}" class="btn btn-primary float-end me-2">
+                    <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Timeline -->
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Order Timeline</h4>
+        </div>
+        <div class="card-body">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-success"></div>
+                    <div class="timeline-content">
+                        <h5 class="timeline-title">Order Placed</h5>
+                        <p class="timeline-date">{{ order.created|date:"F j, Y, g:i a" }}</p>
+                        <p>Your order has been received and is being processed.</p>
+                    </div>
+                </div>
+                
+                {% if order.status != 'pending' %}
+                <div class="timeline-item">
+                    <div class="timeline-marker {% if order.status != 'cancelled' %}bg-success{% else %}bg-danger{% endif %}"></div>
+                    <div class="timeline-content">
+                        <h5 class="timeline-title">Order Processing</h5>
+                        <p class="timeline-date">{{ order.updated|date:"F j, Y, g:i a" }}</p>
+                        <p>Your order is being prepared for shipping.</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if order.status == 'shipped' or order.status == 'delivered' %}
+                <div class="timeline-item">
+                    <div class="timeline-marker {% if order.status == 'delivered' %}bg-success{% else %}bg-warning{% endif %}"></div>
+                    <div class="timeline-content">
+                        <h5 class="timeline-title">Order Shipped</h5>
+                        <p class="timeline-date">{{ order.updated|date:"F j, Y, g:i a" }}</p>
+                        <p>Your order has been shipped and is on its way to you.</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if order.status == 'delivered' %}
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-success"></div>
+                    <div class="timeline-content">
+                        <h5 class="timeline-title">Order Delivered</h5>
+                        <p class="timeline-date">{{ order.updated|date:"F j, Y, g:i a" }}</p>
+                        <p>Your order has been delivered successfully.</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if order.status == 'cancelled' %}
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-danger"></div>
+                    <div class="timeline-content">
+                        <h5 class="timeline-title">Order Cancelled</h5>
+                        <p class="timeline-date">{{ order.updated|date:"F j, Y, g:i a" }}</p>
+                        <p>Your order has been cancelled.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+    /* Timeline styling */
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .timeline:before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #e9ecef;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        left: -30px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #6c757d;
+        border: 3px solid #fff;
+        box-shadow: 0 0 0 2px #e9ecef;
+    }
+    
+    .timeline-title {
+        margin-bottom: 5px;
+    }
+    
+    .timeline-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}

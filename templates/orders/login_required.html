@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+
+{% block title %}Sign In Required - Amazon Clone{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">Sign In Required</h4>
+                </div>
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-lock fa-4x mb-4 text-muted"></i>
+                    <h2>Please sign in to view your orders</h2>
+                    <p class="lead mb-4">You need to be signed in to access your order history and details.</p>
+                    <div class="d-grid gap-3 col-md-6 mx-auto">
+                        <a href="{% url 'accounts:login' %}?next={% url 'orders:order_history' %}" class="btn btn-warning btn-lg">Sign In</a>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-outline-secondary">Create an Account</a>
+                        <a href="{% url 'home' %}" class="btn btn-link">Return to Home Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

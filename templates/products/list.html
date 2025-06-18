@@ -1,0 +1,117 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %} - Amazon Clone
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar with categories -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h4>Categories</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item {% if not category %}active{% endif %}">
+                            <a href="{% url 'products:product_list' %}" class="text-decoration-none {% if not category %}text-white{% endif %}">
+                                All Products
+                            </a>
+                        </li>
+                        {% for c in categories %}
+                            <li class="list-group-item {% if category.id == c.id %}active{% endif %}">
+                                <a href="{{ c.get_absolute_url }}" class="text-decoration-none {% if category.id == c.id %}text-white{% endif %}">
+                                    {{ c.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product listing -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    {% if category %}
+                        {{ category.name }}
+                    {% else %}
+                        All Products
+                    {% endif %}
+                </h2>
+                <div>
+                    <select class="form-select">
+                        <option>Sort by: Featured</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Customer Rating</option>
+                        <option>Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                            {% else %}
+                                <div class="bg-light p-4 text-center">No image</div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <div class="mb-2">
+                                    <span class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </span>
+                                    <small class="text-muted">(4.0)</small>
+                                </div>
+                                <p class="card-text text-danger fw-bold">${{ product.price }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary">View Details</a>
+                                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-cart-plus"></i> Add to Cart
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            No products found in this category.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

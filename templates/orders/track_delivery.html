@@ -1,0 +1,175 @@
+{% extends "base/base.html" %}
+
+{% block title %}Track Delivery - Amazon Clone{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders:order_history' %}">Orders</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders:order_detail' order.id %}">Order #{{ order.id }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Track Delivery</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Track Your Delivery</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Order #{{ order.id }}</h5>
+                    <p class="text-muted">Placed on {{ order.created_at|date:"F j, Y" }}</p>
+                    
+                    {% if order.tracking_number %}
+                    <div class="mb-3">
+                        <strong>Tracking Number:</strong> {{ order.tracking_number }}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <strong>Delivery Method:</strong> {{ order.get_delivery_method_display }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Estimated Delivery:</strong> {{ order.delivery_date|date:"F j, Y" }}
+                        {% if days_remaining > 0 %}
+                            <span class="badge bg-info ms-2">{{ days_remaining }} day{{ days_remaining|pluralize }} remaining</span>
+                        {% elif order.status == 'delivered' %}
+                            <span class="badge bg-success ms-2">Delivered</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <strong>Shipping Address:</strong><br>
+                        {{ order.shipping_address|linebreaks }}
+                    </div>
+                    
+                    <!-- Delivery Progress Bar -->
+                    <div class="mb-4">
+                        <h6>Delivery Progress:</h6>
+                        {% if order.status == 'cancelled' %}
+                            <div class="alert alert-danger">This order has been cancelled.</div>
+                        {% else %}
+                            <div class="progress" style="height: 5px;">
+                                {% if order.status == 'pending' %}
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                {% elif order.status == 'processing' %}
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                {% elif order.status == 'shipped' %}
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                {% elif order.status == 'delivered' %}
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-2">
+                                <div class="text-center">
+                                    <div class="rounded-circle {% if order.status != 'pending' %}bg-warning{% else %}bg-warning{% endif %} text-white d-inline-block" style="width: 30px; height: 30px; line-height: 30px;">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="small mt-1">Order Placed</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="rounded-circle {% if order.status == 'processing' or order.status == 'shipped' or order.status == 'delivered' %}bg-warning{% else %}bg-secondary{% endif %} text-white d-inline-block" style="width: 30px; height: 30px; line-height: 30px;">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div class="small mt-1">Processing</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="rounded-circle {% if order.status == 'shipped' or order.status == 'delivered' %}bg-warning{% else %}bg-secondary{% endif %} text-white d-inline-block" style="width: 30px; height: 30px; line-height: 30px;">
+                                        <i class="fas fa-shipping-fast"></i>
+                                    </div>
+                                    <div class="small mt-1">Shipped</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="rounded-circle {% if order.status == 'delivered' %}bg-success{% else %}bg-secondary{% endif %} text-white d-inline-block" style="width: 30px; height: 30px; line-height: 30px;">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <div class="small mt-1">Delivered</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Delivery Updates Timeline -->
+                    <div class="mb-4">
+                        <h6>Delivery Updates:</h6>
+                        <div class="timeline">
+                            {% for update in delivery_updates %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker {% if update.status == 'delivered' %}bg-success{% else %}bg-warning{% endif %}"></div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-0">{{ update.get_status_display }}</h6>
+                                    <p class="text-muted small mb-1">{{ update.timestamp|date:"F j, Y - g:i A" }}</p>
+                                    {% if update.location %}
+                                    <p class="small mb-1"><strong>Location:</strong> {{ update.location }}</p>
+                                    {% endif %}
+                                    {% if update.description %}
+                                    <p class="small mb-0">{{ update.description }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-muted">No delivery updates available yet.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-outline-primary">Back to Order Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 20px;
+    }
+    
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    
+    .timeline:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 15px;
+        height: 100%;
+        width: 2px;
+        background-color: #e9ecef;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        left: -30px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        top: 5px;
+    }
+    
+    .timeline-content {
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+    
+    .timeline-item:last-child .timeline-content {
+        border-bottom: none;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,392 @@
+/* Amazon Clone CSS */
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+/* Header Styles */
+.navbar-brand img {
+    max-height: 40px;
+    padding: 5px 0;
+}
+
+.navbar-dark {
+    background-color: #131921 !important;
+}
+
+.bg-secondary {
+    background-color: #232f3e !important;
+}
+
+/* Amazon-specific colors */
+.btn-warning {
+    background-color: #febd69;
+    border-color: #febd69;
+}
+
+.btn-warning:hover {
+    background-color: #f3a847;
+    border-color: #f3a847;
+}
+
+/* Product Cards */
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Images */
+.card-img-top {
+    height: 200px;
+    object-fit: contain;
+    padding: 10px;
+}
+
+/* Price Styling */
+.text-danger {
+    color: #B12704 !important;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #232F3E;
+    color: #fff;
+    padding: 40px 0;
+}
+
+footer a {
+    color: #DDD;
+}
+
+footer a:hover {
+    color: #FFF;
+    text-decoration: none;
+}
+
+/* Cart Styling */
+.cart-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+/* Form Controls */
+.form-control:focus {
+    border-color: #febd69;
+    box-shadow: 0 0 0 0.25rem rgba(254, 189, 105, 0.25);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #232F3E;
+    border-color: #232F3E;
+}
+
+.btn-primary:hover {
+    background-color: #131921;
+    border-color: #131921;
+}
+
+/* Navigation */
+.nav-tabs .nav-link.active {
+    color: #232F3E;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+/* Amazon Nav Links */
+.nav-item .nav-link .text-muted {
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+.amazon-nav-link {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.amazon-nav-link .nav-line-1 {
+    font-size: 0.7rem;
+    color: #ccc;
+}
+
+.amazon-nav-link .nav-line-2 {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Breadcrumbs */
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+}
+
+/* Enhanced Daily Offers Carousel */
+.amazon-carousel {
+    margin-bottom: 30px !important;
+    height: 400px;
+}
+
+.amazon-carousel .carousel-inner,
+.amazon-carousel .carousel-item,
+.amazon-carousel .offer-slide {
+    height: 400px;
+}
+
+.carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item.hover {
+    transform: scale(1.02);
+}
+
+.offer-slide {
+    padding: 40px 0;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.offer-content {
+    padding: 20px;
+    animation: fadeInLeft 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.offer-badge {
+    display: inline-block;
+    background-color: #febd69;
+    color: #232F3E;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.offer-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.offer-description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    max-width: 80%;
+    max-height: 80px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.offer-cta {
+    margin-top: 20px;
+}
+
+.offer-price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #febd69;
+}
+
+.offer-image {
+    height: 250px;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    animation: fadeInRight 0.5s ease-in-out;
+    filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.3));
+    background-color: transparent !important;
+    mix-blend-mode: multiply;
+    -webkit-filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.3));
+}
+
+.carousel-item:hover .offer-image {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.offer-timer {
+    display: flex;
+    margin-top: 15px;
+}
+
+.timer-item {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    text-align: center;
+    min-width: 60px;
+}
+
+.timer-count {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.timer-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    pointer-events: none;
+}
+
+.amazon-carousel:hover .carousel-control-prev,
+.amazon-carousel:hover .carousel-control-next {
+    opacity: 0.8;
+}
+
+.carousel-indicators {
+    bottom: 0;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+/* Animations */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 150px;
+    }
+    
+    .offer-slide {
+        height: auto;
+        padding: 20px 0;
+    }
+    
+    .offer-title {
+        font-size: 1.8rem;
+    }
+    
+    .offer-description {
+        font-size: 1rem;
+        max-width: 100%;
+    }
+    
+    .offer-image {
+        max-height: 200px;
+        margin-top: 20px;
+    }
+    
+    .timer-item {
+        min-width: 50px;
+        padding: 3px 6px;
+    }
+    
+    .timer-count {
+        font-size: 1rem;
+    }
+    
+    .timer-label {
+        font-size: 0.7rem;
+    }
+}
+.transparent-image-container {
+    position: relative;
+    z-index: 2;
+}
+
+.offer-image-placeholder {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.carousel-nav-btn {
+    cursor: pointer !important;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    width: 40px !important;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+.carousel-nav-btn:hover {
+    background: rgba(0,0,0,0.5);
+}
+.offer-container {
+    height: 100%;
+}
+
+.image-wrapper {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item {
+    height: 400px;
+}
+
