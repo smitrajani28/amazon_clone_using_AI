@@ -9,8 +9,8 @@ from requests.auth import HTTPBasicAuth
 
 # CONFIGS
 SONAR_HOST_URL = "http://host.docker.internal:9000"
-SONAR_PROJECT_KEY = "amazon-try"
-SONAR_TOKEN = "sqp_8e526cbf6fa7f8e38f71ac0df0f234e39c2301c8"
+SONAR_PROJECT_KEY = "Amazon-Try"
+SONAR_TOKEN = "sqp_88d3457d87ce761402dcf2f3f12f0d7d6838c763"
 SOURCE_DIR = "."
 SONAR_HOST = "http://localhost:9000"
 
@@ -22,6 +22,8 @@ sonar.projectKey={SONAR_PROJECT_KEY}
 sonar.sources={path}
 sonar.host.url={SONAR_HOST_URL}
 sonar.login={SONAR_TOKEN}
+sonar.inclusions=**/*.py,**/*.js,**/*.java
+sonar.exclusions=**/__pycache__/**,**/tests/**,ai-fix-agent/**,ai-fix-agent/**/*.*,**/chat_bot/**
         """.strip())
     print("[✅] sonar-project.properties created.")
 
@@ -104,6 +106,9 @@ def fetch_issues(project_key, sonar_host_url):
                 "rule": issue["rule"]
             })
         
+        with open("parsed_sonar_issues.json", "w") as f:
+            json.dump(parsed_issues, f, indent=2)
+
         print(f"✅ Successfully fetched {len(parsed_issues)} issues")
         return parsed_issues
     except requests.exceptions.RequestException as e:
@@ -117,7 +122,7 @@ def paste_to_amazon_q(issues):
     time.sleep(5)  # Give user time to focus VS Code
 
     # Shortcut to open Q panel (usually Cmd+I or Ctrl+I, but confirm manually)
-    pyautogui.hotkey("ctrl","shift", "alt", "i")  # Windows/Linux; change to "command" if Mac
+    pyautogui.hotkey("ctrl", "i")  # Windows/Linux; change to "command" if Mac
     time.sleep(2)
 
     # Paste JSON and send
@@ -139,4 +144,4 @@ if __name__ == "__main__":
     # issues = fetch_sonar_issues()
     issues = fetch_issues(SONAR_PROJECT_KEY, SONAR_HOST)
     print("[✅] Issues fetched.")
-    paste_to_amazon_q(issues)
+    # paste_to_amazon_q(issues)

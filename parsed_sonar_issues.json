@@ -1,0 +1,182 @@
+[
+  {
+    "file": "staticfiles/admin/js/SelectFilter2.js",
+    "line": 8,
+    "message": "Block is redundant.",
+    "rule": "javascript:S1199"
+  },
+  {
+    "file": "staticfiles/admin/js/SelectFilter2.js",
+    "line": 253,
+    "message": "Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+    "rule": "javascript:S3776"
+  },
+  {
+    "file": "staticfiles/admin/js/actions.js",
+    "line": 92,
+    "message": "Use an object spread instead of `Object.assign` eg: `{ ...foo }`.",
+    "rule": "javascript:S6661"
+  },
+  {
+    "file": "staticfiles/admin/js/admin/DateTimeShortcuts.js",
+    "line": 182,
+    "message": "'which' is deprecated.",
+    "rule": "javascript:S1874"
+  },
+  {
+    "file": "staticfiles/admin/js/admin/DateTimeShortcuts.js",
+    "line": 339,
+    "message": "'which' is deprecated.",
+    "rule": "javascript:S1874"
+  },
+  {
+    "file": "staticfiles/admin/js/calendar.js",
+    "line": 67,
+    "message": "Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.",
+    "rule": "javascript:S3776"
+  },
+  {
+    "file": "staticfiles/admin/js/calendar.js",
+    "line": 126,
+    "message": "This loop's stop condition tests \"currentDay, days\" but the incrementer updates \"i\".",
+    "rule": "javascript:S1994"
+  },
+  {
+    "file": "staticfiles/admin/js/collapse.js",
+    "line": 3,
+    "message": "Block is redundant.",
+    "rule": "javascript:S1199"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 59,
+    "message": "Block is redundant.",
+    "rule": "javascript:S1199"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 60,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 64,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 64,
+    "message": "Refactor this function to always return the same type.",
+    "rule": "javascript:S3800"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 68,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 68,
+    "message": "Refactor this function to always return the same type.",
+    "rule": "javascript:S3800"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 72,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 76,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 76,
+    "message": "Refactor this function to always return the same type.",
+    "rule": "javascript:S3800"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 80,
+    "message": "Refactor this function to always return the same type.",
+    "rule": "javascript:S3800"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 80,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 84,
+    "message": "Refactor this function to always return the same type.",
+    "rule": "javascript:S3800"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 84,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 88,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 94,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 100,
+    "message": "Date prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 115,
+    "message": "'(from: number, length?: number): string' is deprecated.",
+    "rule": "javascript:S1874"
+  },
+  {
+    "file": "staticfiles/admin/js/core.js",
+    "line": 136,
+    "message": "String prototype is read only, properties should not be added.",
+    "rule": "javascript:S6643"
+  },
+  {
+    "file": "staticfiles/admin/js/inlines.js",
+    "line": 281,
+    "message": "Update this function so that its implementation is not identical to the one on line 217.",
+    "rule": "javascript:S4144"
+  },
+  {
+    "file": "staticfiles/admin/js/theme.js",
+    "line": 2,
+    "message": "Block is redundant.",
+    "rule": "javascript:S1199"
+  },
+  {
+    "file": "staticfiles/admin/js/theme.js",
+    "line": 29,
+    "message": "'If' statement should not be the only statement in 'else' block",
+    "rule": "javascript:S6660"
+  },
+  {
+    "file": "staticfiles/admin/js/urlify.js",
+    "line": 163,
+    "message": "Group parts of the regex together to make the intended operator precedence explicit.",
+    "rule": "javascript:S5850"
+  }
+]
