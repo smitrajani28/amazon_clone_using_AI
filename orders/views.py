@@ -6,6 +6,9 @@ from .models import Order, OrderItem, DeliveryUpdate
 from .forms import DeliveryMethodForm
 from cart.cart import Cart
 
+# Define constant for order detail URL
+ORDER_DETAIL_URL = 'orders:order_detail'
+
 @login_required
 def order_history(request):
     orders = Order.objects.filter(user=request.user)
@@ -60,7 +63,7 @@ def order_create(request):
         cart.clear()
         
         messages.success(request, 'Order placed successfully')
-        return redirect('orders:order_detail', order_id=order.id)
+        return redirect(ORDER_DETAIL_URL, order_id=order.id)
     
     return render(request, 'orders/order_create.html', {'cart': cart})
 
@@ -71,7 +74,7 @@ def select_delivery_method(request, order_id):
     # Only allow changing delivery method if order is still pending
     if order.status != 'pending':
         messages.error(request, 'Cannot change delivery method for orders that have been processed.')
-        return redirect('orders:order_detail', order_id=order.id)
+        return redirect(ORDER_DETAIL_URL, order_id=order.id)
     
     if request.method == 'POST':
         form = DeliveryMethodForm(request.POST, instance=order)
@@ -88,7 +91,7 @@ def select_delivery_method(request, order_id):
             )
             
             messages.success(request, f'Delivery method updated to {order.get_delivery_method_display()}')
-            return redirect('orders:order_detail', order_id=order.id)
+            return redirect(ORDER_DETAIL_URL, order_id=order.id)
     else:
         form = DeliveryMethodForm(instance=order)
     

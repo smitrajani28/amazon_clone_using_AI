@@ -23,10 +23,10 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    shipping_address = models.TextField(null=True, blank=True)  # Made nullable temporarily
+    shipping_address = models.TextField(blank=True, default='')  # Use default empty string instead of null
     delivery_method = models.CharField(max_length=20, choices=DELIVERY_CHOICES, default='standard')
-    delivery_date = models.DateField(null=True, blank=True)
-    tracking_number = models.CharField(max_length=50, blank=True, null=True)
+    delivery_date = models.DateField(blank=True, null=True)  # Date can be null
+    tracking_number = models.CharField(max_length=50, blank=True, default='')
     
     class Meta:
         ordering = ['-created_at']
@@ -76,8 +76,8 @@ class DeliveryUpdate(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='delivery_updates')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
-    location = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, default='')
+    description = models.TextField(blank=True, default='')
     
     class Meta:
         ordering = ['-timestamp']

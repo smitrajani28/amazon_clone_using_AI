@@ -181,7 +181,11 @@ def create_dummy_data():
             slug=cat_data['slug']
         )
         categories[cat_data['slug']] = category
-        action = 'Created' if created else 'Already exists'
+        # Define constant for status messages
+        STATUS_CREATED = 'Created'
+        STATUS_EXISTS = 'Already exists'
+        
+        action = STATUS_CREATED if created else STATUS_EXISTS
         print(f"{action}: Category '{category.name}'")
     
     # Create products
@@ -203,7 +207,7 @@ def create_dummy_data():
             products_by_category[prod_data['category']] = []
         products_by_category[prod_data['category']].append(product)
         
-        action = 'Created' if created else 'Already exists'
+        action = STATUS_CREATED if created else STATUS_EXISTS
         print(f"{action}: Product '{product.name}' in category '{category.name}'")
     
     # Create daily offers
@@ -223,7 +227,7 @@ def create_dummy_data():
                 }
             )
             
-            action = 'Created' if created else 'Already exists'
+            action = STATUS_CREATED if created else STATUS_EXISTS
             print(f"{action}: Daily Offer '{offer.title}' linked to '{product.name}'")
 
 if __name__ == '__main__':

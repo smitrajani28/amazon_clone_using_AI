@@ -1,0 +1,53 @@
+name: SonarQube Scan + AI Fix
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  analyze-and-fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Run SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v1.1.0
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Install AI Fix Agent dependencies
+        run: |
+          pip install -r ai-fix-agent/requirements.txt
+
+      - name: Run AI Fix Agent
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python ai-fix-agent/agent/main.py
+
+      - name: Commit & Push Fixed Code
+        run: |
+          git config --global user.email "ai-fix@bot.com"
+          git config --global user.name "AI Fix Bot"
+          git add .
+          git commit -m "🤖 Auto-fix: Code issues fixed by AI"
+          git push
+        continue-on-error: true  # in case nothing to commit

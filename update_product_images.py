@@ -42,7 +42,7 @@ FALLBACK_IMAGES = {
 def download_image(url):
     """Download image from URL and return as ContentFile"""
     try:
-        response = requests.get(url, verify=False)  # Disable SSL verification
+        response = requests.get(url, verify=True)  # Enable SSL verification
         if response.status_code == 200:
             return ContentFile(response.content)
         else:
@@ -51,6 +51,33 @@ def download_image(url):
     except Exception as e:
         print(f"Error downloading image {url}: {e}")
         return None
+
+def get_image_url(product):
+    """Get image URL for a product, with fallback to category"""
+    image_url = PRODUCT_IMAGES.get(product.name)
+    if not image_url:
+        print(f"No image URL found for product: {product.name}")
+        category_name = product.category.name
+        image_url = FALLBACK_IMAGES.get(category_name)
+        if not image_url:
+            print(f"No fallback image found for category: {category_name}")
+    return image_url
+
+def try_fallback_image(product):
+    """Try to use fallback image for a product"""
+    category_name = product.category.name
+    fallback_url = FALLBACK_IMAGES.get(category_name)
+    if not fallback_url:
+        return False
+        
+    print(f"Trying fallback image for category: {category_name}")
+    fallback_content = download_image(fallback_url)
+    if fallback_content:
+        filename = f"{product.slug}_fallback.jpg"
+        product.image.save(filename, fallback_content, save=True)
+        print(f"Added fallback image to product: {product.name}")
+        return True
+    return False
 
 def add_product_images():
     """Add images to products based on their names"""
@@ -63,15 +90,9 @@ def add_product_images():
     
     for product in products:
         # Get image URL for this product
-        image_url = PRODUCT_IMAGES.get(product.name)
+        image_url = get_image_url(product)
         if not image_url:
-            print(f"No image URL found for product: {product.name}")
-            # Try fallback image based on category
-            category_name = product.category.name
-            image_url = FALLBACK_IMAGES.get(category_name)
-            if not image_url:
-                print(f"No fallback image found for category: {category_name}")
-                continue
+            continue
         
         # Download image
         print(f"Downloading image for product: {product.name}")
@@ -86,16 +107,7 @@ def add_product_images():
             print(f"Added image to product: {product.name}")
         else:
             print(f"Failed to add image to product: {product.name}")
-            # Try fallback image based on category
-            category_name = product.category.name
-            fallback_url = FALLBACK_IMAGES.get(category_name)
-            if fallback_url:
-                print(f"Trying fallback image for category: {category_name}")
-                fallback_content = download_image(fallback_url)
-                if fallback_content:
-                    filename = f"{product.slug}_fallback.jpg"
-                    product.image.save(filename, fallback_content, save=True)
-                    print(f"Added fallback image to product: {product.name}")
+            try_fallback_image(product)
 
 if __name__ == '__main__':
     print("Adding images to products...")

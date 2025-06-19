@@ -386,7 +386,5 @@ footer a:hover {
     justify-content: center;
 }
 
-.carousel-item {
-    height: 400px;
-}
+/* Height already defined in .amazon-carousel .carousel-item */
 

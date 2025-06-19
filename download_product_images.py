@@ -33,7 +33,7 @@ PRODUCT_IMAGES = {
 def download_image(url):
     """Download image from URL and return as ContentFile"""
     try:
-        response = requests.get(url, verify=False)  # Disable SSL verification
+        response = requests.get(url, verify=True)  # Enable SSL verification
         if response.status_code == 200:
             return ContentFile(response.content)
         else:

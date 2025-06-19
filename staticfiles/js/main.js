@@ -3,15 +3,15 @@
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
     // Initialize carousel with enhanced options
-    var dailyOffersCarousel = document.getElementById('dailyOffersCarousel');
+    const dailyOffersCarousel = document.getElementById('dailyOffersCarousel');
     if (dailyOffersCarousel) {
-        var carousel = new bootstrap.Carousel(dailyOffersCarousel, {
+        const carousel = new bootstrap.Carousel(dailyOffersCarousel, {
             interval: 5000,
             wrap: true,
             touch: true,
