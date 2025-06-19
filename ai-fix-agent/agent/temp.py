@@ -13,6 +13,7 @@ SONAR_PROJECT_KEY = "Amazon-Try"
 SONAR_TOKEN = "sqp_88d3457d87ce761402dcf2f3f12f0d7d6838c763"
 SOURCE_DIR = "."
 SONAR_HOST = "http://localhost:9000"
+ROOT_DIR = os.path.basename(os.getcwd())
 
 # STEP 1: sonar-project.properties
 def create_sonar_properties(path):
@@ -122,10 +123,14 @@ def paste_to_amazon_q(issues):
     time.sleep(5)  # Give user time to focus VS Code
 
     # Shortcut to open Q panel (usually Cmd+I or Ctrl+I, but confirm manually)
-    pyautogui.hotkey("ctrl", "i")  # Windows/Linux; change to "command" if Mac
+    # pyautogui.hotkey("Alt","Windows", "Q")  # Windows/Linux; change to "command" if Mac
+    pyautogui.hotkey("altleft", "winleft", "q")
     time.sleep(2)
-
+    pyautogui.write(f"@{ROOT_DIR}", interval=0.05)
+    time.sleep(1)
+    pyautogui.hotkey("shift", "enter")  # Open JSON input mode
     # Paste JSON and send
+    time.sleep(1)
     pyautogui.hotkey("ctrl", "v")
     time.sleep(1)
     pyautogui.press("enter")
@@ -144,4 +149,4 @@ if __name__ == "__main__":
     # issues = fetch_sonar_issues()
     issues = fetch_issues(SONAR_PROJECT_KEY, SONAR_HOST)
     print("[✅] Issues fetched.")
-    # paste_to_amazon_q(issues)
+    paste_to_amazon_q(issues)
