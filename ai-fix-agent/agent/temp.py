@@ -132,13 +132,13 @@ def paste_to_amazon_q(issues):
     # Paste JSON and send
     time.sleep(1)
     pyautogui.hotkey("ctrl", "v")
-    time.sleep(1)
+    time.sleep(2)
     pyautogui.press("enter")
     print("[✅] JSON sent to Amazon Q.")
 
     # Send trust confirmation text (if required)
     time.sleep(2)
-    pyautogui.write("yes", interval=0.1)
+    # pyautogui.write("yes", interval=0.1)
     pyautogui.press("enter")
 
 
